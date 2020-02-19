@@ -10,6 +10,6 @@ import java.util.Optional;
 
 @Repository
 public interface CharacterRepository extends JpaRepository<Character, Integer> {
-    @Query(value = "select name from character c where c.name like %?1%", nativeQuery = true)
+    @Query(value = "select * from character c where c.name ilike %?1%", nativeQuery = true)
     Optional<List<Character>> findCharactersByName(String name);
 }
