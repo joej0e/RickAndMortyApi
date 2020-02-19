@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 @RestController
 public class RickAndMortyController {
@@ -20,14 +21,20 @@ public class RickAndMortyController {
     private CharacterRepository characterRepository;
 
     @GetMapping("/{name}")
-    public ResponseEntity<List<Character>> findCharacters(@PathVariable(value = "name") String name) {
+    public ResponseEntity<List<String>> findCharacters(@PathVariable(value = "name") String name) {
         Optional<List<Character>> characters = characterRepository.findCharactersByName(name);
-        return characters.map(ResponseEntity::ok).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        if(characters.isPresent()) {
+            List<String> charactersNames = characters.get().stream()
+                    .map(Character::getName)
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(charactersNames);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("/character")
-    public ResponseEntity<Character> randomCharacter() {
+    public ResponseEntity<String> randomCharacter() {
         int randomNum = ThreadLocalRandom.current().nextInt(0, (int) characterRepository.count() + 1);
-        return ResponseEntity.ok(characterRepository.findById(randomNum).get());
+        return ResponseEntity.ok(characterRepository.findById(randomNum).get().getDescription());
     }
 }

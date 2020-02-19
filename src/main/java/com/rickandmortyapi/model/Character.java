@@ -1,5 +1,7 @@
 package com.rickandmortyapi.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
 
 @Entity
@@ -19,8 +21,14 @@ public class Character {
         this.name = name;
         this.description = description;
     }
-
-
     public Character() {
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }
