@@ -9,13 +9,13 @@ public class Character {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    Integer id;
+    private Integer id;
 
     @Column
-    String name;
+    private String name;
 
     @Column(length = 10000)
-    String description;
+    private String description;
 
     public Character(String name, String description) {
         this.name = name;
