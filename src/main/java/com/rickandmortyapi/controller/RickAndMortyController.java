@@ -34,7 +34,12 @@ public class RickAndMortyController {
 
     @GetMapping("/character")
     public ResponseEntity<String> randomCharacter() {
-        int randomNum = ThreadLocalRandom.current().nextInt(0, (int) characterRepository.count() + 1);
-        return ResponseEntity.ok(characterRepository.findById(randomNum).get().getDescription());
+        int randomNum = ThreadLocalRandom.current().nextInt(1, (int) characterRepository.count() + 1);
+        Character character = characterRepository.findById(randomNum).get();
+        String description = character.getDescription();
+        if(description.equals(character.getName())){
+            return randomCharacter();
+        }
+        return ResponseEntity.ok(description);
     }
 }

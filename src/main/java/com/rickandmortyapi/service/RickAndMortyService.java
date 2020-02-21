@@ -23,13 +23,17 @@ public class RickAndMortyService {
     @Autowired
     private CharacterRepository characterRepository;
 
+    public static final String URL = "https://en.wikipedia.org/wiki/List_of_Rick_and_Morty_characters";
+    public static final String NAMES_SELECTOR = "p b, li>b:first-of-type";
+    public static final String DESCRIPTION_SELECTOR = "div+p:has(b), ul li:has(b)";
+
     @Scheduled(cron = "0 15 10 15 * ?")
     @PostConstruct
     @Transactional
     public void update() throws IOException {
-        Document doc = Jsoup.connect("https://en.wikipedia.org/wiki/List_of_Rick_and_Morty_characters").get();
-        Elements charactersNames = doc.select("p b, li>b:first-of-type");
-        Elements charactersDescription = doc.select("div+p:has(b), ul li:has(b)");
+        Document doc = Jsoup.connect(URL).get();
+        Elements charactersNames = doc.select(NAMES_SELECTOR);
+        Elements charactersDescription = doc.select(DESCRIPTION_SELECTOR);
         List<String> charactersNamesList = charactersNames.eachText();
         List<String> charactersDescriptionList = charactersDescription.eachText();
         charactersDescriptionList = charactersDescriptionList.stream()
@@ -39,6 +43,7 @@ public class RickAndMortyService {
         for (int i = 0; i < charactersNamesList.size(); i++) {
             characters.add(new Character(charactersNamesList.get(i), charactersDescriptionList.get(i)));
         }
+        characterRepository.deleteAll();
         characterRepository.saveAll(characters);
     }
 

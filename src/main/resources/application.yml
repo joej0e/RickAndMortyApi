@@ -4,8 +4,8 @@ spring:
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5433/rickandmorty
-    username: #set your username
-    password: #set your password
+    username: postgres #set your username
+    password: sofarfrom142 #set your password
   # JPA properties
   jpa:
     hibernate:
